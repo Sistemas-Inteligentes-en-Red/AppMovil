@@ -1,27 +1,16 @@
-# Instalación
+# aplicacion1
 
-Desarollo de la app movil del modelo ultima milla de la plataforma logistica.
+A new Flutter project.
 
-## Consideraciones
+## Getting Started
 
-1. Instalacion de Android studio
-2. Instalacion de Visual Studio Code
-3. Instalacion de Flutter
+This project is a starting point for a Flutter application.
 
+A few resources to get you started if this is your first Flutter project:
 
-## Procedimiento
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-### Validacion de dependencias
-
-Ejecutar el Flutter doctor 
-```shell
-nnn
-```
-
-### Descarga del repositorio
-
-```shell
-git clone https://github.com/Sistemas-Inteligentes-en-Red/AppMovil.git
-```
-### Abrir el poryecto en VSC
-
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

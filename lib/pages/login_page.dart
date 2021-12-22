@@ -55,8 +55,6 @@ class _LoginPageState extends State<LoginPage> {
                   child: Circle(
                     size: orangeSize,
                     colors: [
-                      // Color.fromRGBO(255, 255, 255, 1),
-                      // Color.fromRGBO(254, 80, 0, 1),
                       Color.fromRGBO(0, 153, 255, 0.5),
                       Color.fromRGBO(0, 92, 153, 0.8),
                     ],
@@ -73,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: responsive.dp(4),
                       ),
                       Text(
-                        'PLATAFORMA RUTEO',
+                        'APPI  TRACK',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: responsive.dp(2.5),

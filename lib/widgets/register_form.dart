@@ -1,6 +1,5 @@
 import 'package:aplicacion1/api/authentication_api.dart';
 import 'package:aplicacion1/pages/home_page.dart';
-
 import 'package:aplicacion1/utils/dialogs.dart';
 import 'package:aplicacion1/utils/responsive.dart';
 import 'package:flutter/material.dart';
@@ -15,22 +14,14 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  //todo esto e spara poder validar y capturar la info
   GlobalKey<FormState> _formKey = GlobalKey();
   String _email = '', _password = '', _username;
-  //Consumir la appi
   final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
-  //antes
   Logger _logger = Logger();
-  //
   Future<void> _submit() async {
     final isOk = _formKey.currentState.validate();
     print("form isOk $isOk");
     if (isOk) {
-      // consumiria un servico rets pendiente
-      //print("Email: $_email");
-      //print("Password: $_password");
-      //print("Password: $_username");
       ProgressDialog.show(context);
       final response = await _authenticationAPI.register(
         username: _username,
@@ -41,8 +32,8 @@ class _RegisterFormState extends State<RegisterForm> {
       if (response.data != null) {
         _logger.i("Registro Exitoso ::: ${response.data}");
         Navigator.pushNamedAndRemoveUntil(
-          context, HomePage.routeNme,
-          //(route) => route.settings.name=='perfil', asi borra hasta esta, con false todo hist
+          context,
+          HomePage.routeNme,
           (_) => false,
         );
       } else {
@@ -61,16 +52,13 @@ class _RegisterFormState extends State<RegisterForm> {
           tittle: "Error",
           description: message,
         );
-        //en el video min 13 explica sacar dato del json
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    //traer el responsive
     final Responsive responsive = Responsive.of(context);
-    //
     return Positioned(
       bottom: 30,
       child: Container(
@@ -86,7 +74,6 @@ class _RegisterFormState extends State<RegisterForm> {
                 label: "NOMBRE DE USUARIO",
                 fontZise: responsive.dp(responsive.isTablet ? 1.2 : 1.4),
                 onChanged: (text) {
-                  //print("Email: $text");
                   _username = text;
                 },
                 validator: (text) {
@@ -102,7 +89,6 @@ class _RegisterFormState extends State<RegisterForm> {
                 label: "CORREO ELECTRONICO",
                 fontZise: responsive.dp(responsive.isTablet ? 1.2 : 1.4),
                 onChanged: (text) {
-                  //print("Email: $text");
                   _email = text;
                 },
                 validator: (text) {
@@ -119,7 +105,6 @@ class _RegisterFormState extends State<RegisterForm> {
                 obscureText: true,
                 fontZise: responsive.dp(responsive.isTablet ? 1.2 : 1.4),
                 onChanged: (text) {
-                  //print("Email: $text");
                   _password = text;
                 },
                 validator: (text) {

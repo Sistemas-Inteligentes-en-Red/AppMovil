@@ -24,14 +24,11 @@ class InputText extends StatelessWidget {
       keyboardType: this.keyboardType,
       obscureText: this.obscureText,
       onChanged: this.onChanged,
-      // para mostrar letra por letra print(":::::$text");(text)
       validator: this.validator,
       style: TextStyle(fontSize: this.fontZise),
       decoration: InputDecoration(
-        //suffix: Text("Forgot Password"), aparece con el foco
         labelText: this.label,
         contentPadding: EdgeInsets.symmetric(vertical: 6),
-
         enabledBorder: this.borderEnabled
             ? UnderlineInputBorder(
                 borderSide: BorderSide(

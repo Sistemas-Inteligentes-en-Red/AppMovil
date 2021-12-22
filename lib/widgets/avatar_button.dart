@@ -23,8 +23,8 @@ class AvatarButton extends StatelessWidget {
             ],
           ),
           child: ClipOval(
-            child: Image.network(
-              "https://media.istockphoto.com/vectors/person-avatar-user-icon-vector-id678879108?s=612x612",
+            child: Image.asset(
+              "images/avatar.png",
               width: this.imageSize,
               height: this.imageSize,
             ),

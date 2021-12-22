@@ -4,12 +4,14 @@ class Gif {
   double tiempo;
   double distancia;
   String fecha;
+  int visit;
 
-  Gif(id, ruta, tiempo, distancia, fecha) {
+  Gif(id, ruta, tiempo, distancia, fecha, visit) {
     this.id = id;
     this.ruta = ruta;
     this.tiempo = tiempo;
     this.distancia = distancia;
     this.fecha = fecha;
+    this.visit = visit;
   }
 }

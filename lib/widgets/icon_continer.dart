@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class IconContainer extends StatelessWidget {
-  //variable para la pocicion
   final double size;
   const IconContainer({Key key, @required this.size})
       : assert(size != null && size > 0),
@@ -17,7 +16,6 @@ class IconContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(this.size * 0.15),
         boxShadow: [
           BoxShadow(
-            //xx 0, 153, 255, 0.5   254, 80, 0, 1
             color: Color.fromRGBO(0, 153, 255, 0.5),
             blurRadius: 20,
             offset: Offset(0, 0),

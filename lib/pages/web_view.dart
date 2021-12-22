@@ -1,15 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-//import 'package:http/http.dart' as http;
 import 'dart:convert';
-//import 'dart:io';
 
 class PageTwo extends StatelessWidget {
-  // static const routeName = 'rutas';
-  //static const routeName = 'second';
-
   @override
   Widget build(BuildContext context) {
     final name = ModalRoute.of(context).settings.arguments;
@@ -21,9 +15,9 @@ class PageTwo extends StatelessWidget {
       title: 'Material App',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('MAPA DE RUTA'),
+          title: Text('MAPA DE LA RUTA'),
           elevation: 12,
-          backgroundColor: Color.fromRGBO(254, 80, 0, 1),
+          backgroundColor: Colors.black,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_rounded),
             onPressed: () {

@@ -2,7 +2,7 @@
     package="com.example.aplicacion1">
    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="aplicacion1"
+        android:label="Appi Track"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
 <meta-data android:name="com.google.android.geo.API_KEY"

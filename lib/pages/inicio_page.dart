@@ -1,7 +1,5 @@
-//import 'package:aplicacion1/pages/rutas_page.dart';
-//import 'dart:io';
-
-import 'package:aplicacion1/widgets/input_text.dart';
+import 'package:aplicacion1/pages/rutas_page.dart';
+//import 'package:aplicacion1/widgets/input_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,28 +15,19 @@ class _InicioPageState extends State<InicioPage> {
   final _scaffkey = GlobalKey<ScaffoldState>();
 
   final formKey = new GlobalKey<ScaffoldState>();
-  String placa;
-
+  String placa, xtoken;
+  final placaVehiculo = TextEditingController();
+  var textox = 'Palaca del vehiculo';
   @override
   Widget build(BuildContext context) {
-    //------------------------------------------------------
     SecondPageArguments arguments = ModalRoute.of(context).settings.arguments;
-    //----------------------------------------------------
+    TextEditingController _textoController = TextEditingController(text: "");
     return Scaffold(
       key: _scaffkey,
       appBar: AppBar(
-        title: Text('Inicio Conductores'),
-        elevation: 12,
-        backgroundColor: Color.fromRGBO(0, 48, 135, 1),
-        //actions: [
-        // IconButton(
-        // icon: Icon(Icons.logout, color: Colors.red),
-        // onPressed: () {
-        //exit(0);
-        //   SystemNavigator.pop();
-        //  })
-        //],
-      ),
+          title: Text('CONDUCTORES'),
+          elevation: 12,
+          backgroundColor: Colors.black),
       drawer: _getDrawer(context),
       body: Center(
         child: Column(
@@ -46,42 +35,37 @@ class _InicioPageState extends State<InicioPage> {
           children: [
             Image.asset(
               'images/logo.png',
-              height: 200,
-              width: 150,
+              height: 180,
+              width: 130,
             ),
             Text(
-              //-------------------------------------------------
-              'Bienvenido Plataforma Ruteo: ' + arguments.username,
-
-              //---------------------------------------------------
+              'Bienvenido: ' + arguments.token,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              //-------------------------------------------------
-              'Buscar Rutas por Placa',
-
-              //---------------------------------------------------
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
+                fontSize: 13,
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 25),
             Container(
-              child: InputText(
-                  keyboardType: TextInputType.emailAddress,
-                  label: "INGRESAR PLCA DEL VEHICULO"),
+              padding: EdgeInsets.all(10),
+              child: TextField(
+                autofocus: true,
+                keyboardType: TextInputType.text,
+                controller: _textoController,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.car_rental),
+                  fillColor: Colors.blue[30],
+                  filled: true,
+                  hintText: "Placa",
+                  helperText: textox,
+                ),
+              ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 5),
             Container(
+              padding: EdgeInsets.all(10),
               child: SizedBox(
                 width: double.infinity,
                 child: MaterialButton(
@@ -90,20 +74,30 @@ class _InicioPageState extends State<InicioPage> {
                     "Consultar Ruta",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () => _showRuta(context),
+                  onPressed: () {
+                    if (_textoController.text.trim().length == 0) {
+                      setState(() {
+                        textox = 'Por Favor Ingrese la Placa del Vehiculo';
+                      });
+                      return null;
+                    } else {
+                      xtoken = arguments.username;
+                      print(_textoController.text);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ListaPage(_textoController.text, xtoken)));
+                    }
+                  },
                   color: Color.fromRGBO(0, 153, 255, 1),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 15),
           ],
         ),
       ),
-      //floatingActionButton: FloatingActionButton(
-      // child: Icon(Icons.menu),
-      //  onPressed: () => _scaffkey.currentState.openDrawer(),
-      //  backgroundColor: Color.fromRGBO(254, 80, 0, 1),
-      //),
     );
   }
 
@@ -127,64 +121,61 @@ class _InicioPageState extends State<InicioPage> {
               ]),
             ),
           ),
-          Card(
-            child: ListTile(
-              title: InputText(
-                  keyboardType: TextInputType.emailAddress,
-                  label: "PLACA DEL VEHICULO",
-                  //nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-                  onChanged: (value) {
-                    placa = value;
-                  },
-                  validator: (valor) {
-                    if (valor.trim().length == 0) {
-                      return "Ingresa la Placa";
-                    }
-                    return null;
-                  }
-                  //nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-                  ),
-              leading: Icon(
-                Icons.airport_shuttle,
-                color: Color.fromRGBO(0, 153, 255, 1),
-              ),
-              trailing: Icon(Icons.arrow_forward,
-                  color: Color.fromRGBO(0, 153, 255, 1)),
-              onTap: () => _showRuta(context),
-            ),
-          ),
-          Card(
-            child: ListTile(
-              title: Text(
-                'Reportes',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              leading: Icon(
-                Icons.home,
-                color: Colors.black12,
-              ),
-              onTap: () {},
-            ),
-          ),
-          Card(
-            child: ListTile(
-              title: Text(
-                'Indicadores',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              leading: Icon(
-                Icons.contact_mail_sharp,
-                color: Colors.black12,
-              ),
-              onTap: () {},
-            ),
-          ),
+          //Card(
+          //child: ListTile(
+          //title: InputText(
+          //keyboardType: TextInputType.emailAddress,
+          //label: "Rutas",
+          //onChanged: (value) {
+          //placa = value;
+          //},
+          //validator: (valor) {
+          //if (valor.trim().length == 0) {
+          //return "Ingresa la Placa";
+          //}
+          //return null;
+          //}),
+          //leading: Icon(
+          //Icons.airport_shuttle,
+          //color: Color.fromRGBO(0, 153, 255, 1),
+          //),
+          //trailing: Icon(Icons.arrow_forward,
+          //  color: Color.fromRGBO(0, 153, 255, 1)),
+          //onTap: () => _showRuta(context),
+          //),
+          //),
+          //Card(
+          //child: ListTile(
+          //title: Text(
+          //'Reportes',
+          //style: TextStyle(
+          //fontSize: 16,
+          //fontWeight: FontWeight.w500,
+          //),
+          //),
+          //leading: Icon(
+          //Icons.home,
+          //color: Colors.black12,
+          //),
+          //onTap: () {},
+          //),
+          //),
+          //Card(
+          //child: ListTile(
+          //title: Text(
+          //'Indicadores',
+          //style: TextStyle(
+          //fontSize: 16,
+          //fontWeight: FontWeight.w500,
+          //),
+          //),
+          //leading: Icon(
+          //Icons.contact_mail_sharp,
+          //color: Colors.black12,
+          //),
+          //onTap: () {},
+          //),
+          //),
           Card(
             child: ListTile(
               title: Text(
@@ -208,17 +199,13 @@ class _InicioPageState extends State<InicioPage> {
     );
   }
 
-  void _showRuta(BuildContext context) {
-    //Navigator.pushNamed(context, 'rutas');
-    //Navigator.pushNamed(context, ListaPage.routeName);
-    Navigator.pushNamed(context, 'rutas');
-  }
+  //void _showRuta(BuildContext context) {
+  //Navigator.pushNamed(context, 'rutas');
+  //}
 }
 
-//------------------------------------------------------
 class SecondPageArguments {
   String token;
   String username;
   SecondPageArguments(this.token, this.username);
 }
-//--------------------------------------------------------

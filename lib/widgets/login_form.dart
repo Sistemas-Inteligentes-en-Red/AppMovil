@@ -1,5 +1,4 @@
 import 'package:aplicacion1/api/authentication_api.dart';
-//import 'package:aplicacion1/pages/home_page.dart';
 import 'package:aplicacion1/pages/inicio_page.dart';
 import 'package:aplicacion1/utils/dialogs.dart';
 import 'package:aplicacion1/utils/responsive.dart';
@@ -14,17 +13,13 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  //todo esto e spara poder validar y capturar la info
   GlobalKey<FormState> _formKey = GlobalKey();
   String _email = '', _password = '', token = '', username = '';
   AuthenticationAPI _authenticationAPI = AuthenticationAPI();
   Future<void> _submit() async {
     final isOk = _formKey.currentState.validate();
-    print("form isOk $isOk");
+    //print("form isOk $isOk");
     if (isOk) {
-      // consumiria un servico rets pendiente
-      //print("Email: $_email");
-      //print("Password: $_password");
       ProgressDialog.show(context);
       final response = await _authenticationAPI.login(
         email: _email,
@@ -32,21 +27,13 @@ class _LoginFormState extends State<LoginForm> {
       );
       ProgressDialog.dissmiss(context);
       if (response.data != null) {
-        //---------------------------------------------------
-
         token = response.data['token'];
         username = response.data['username'];
-        print(token);
-        print(username);
-        //---------------------------------------------------------
+        //print(token);
+        //print(username);
         Navigator.pushNamedAndRemoveUntil(
             context, InicioPage.routeName, (_) => false,
             arguments: SecondPageArguments(username, token));
-        //---------------------------------------------
-        //print(response.data['token']);
-        //token = response.data['token'];
-        //print(token);
-        //---------------------------------------------
       } else {
         String message = response.error.message;
         if (response.error.statusCode == -1) {
@@ -65,7 +52,6 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    //traer el responsive
     final Responsive responsive = Responsive.of(context);
     //
     return Positioned(
@@ -83,7 +69,6 @@ class _LoginFormState extends State<LoginForm> {
                 label: "CORREO ELECTRONICO",
                 fontZise: responsive.dp(responsive.isTablet ? 1.2 : 1.4),
                 onChanged: (text) {
-                  //print("Email: $text");
                   _email = text;
                 },
                 validator: (text) {
@@ -112,7 +97,6 @@ class _LoginFormState extends State<LoginForm> {
                         fontZise:
                             responsive.dp(responsive.isTablet ? 1.2 : 1.4),
                         onChanged: (text) {
-                          //print("Password: $text");
                           _password = text;
                         },
                         validator: (text) {
@@ -123,19 +107,19 @@ class _LoginFormState extends State<LoginForm> {
                         },
                       ),
                     ),
-                    MaterialButton(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        "haz olvidado tu contraseña?",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize:
-                                responsive.dp(responsive.isTablet ? 1.2 : 1.4)),
-                      ),
-                      onPressed: () {
-                        print("Restablecer Contraseña");
-                      },
-                    ),
+                    // MaterialButton(
+                    // padding: EdgeInsets.symmetric(vertical: 10),
+                    // child: Text(
+                    //  "haz olvidado tu contraseña?",
+                    //  style: TextStyle(
+                    //   fontWeight: FontWeight.bold,
+                    //  fontSize:
+                    //   responsive.dp(responsive.isTablet ? 1.2 : 1.4)),
+                    //),
+                    // onPressed: () {
+                    //   print("Restablecer Contraseña");
+                    //},
+                    //),
                   ],
                 ),
               ),
@@ -154,26 +138,26 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
               SizedBox(height: responsive.dp(2)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "No Tienes Cuenta?",
-                    style: TextStyle(fontSize: responsive.dp(1.5)),
-                  ),
-                  MaterialButton(
-                    child: Text(
-                      "Registrate",
-                      style: TextStyle(
-                          color: Color.fromRGBO(254, 80, 0, 1),
-                          fontSize: responsive.dp(1.5)),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'register');
-                    },
-                  ),
-                ],
-              ),
+              //Row(
+              //mainAxisAlignment: MainAxisAlignment.center,
+              // children: [
+              //Text(
+              // "No Tienes Cuenta?",
+              // style: TextStyle(fontSize: responsive.dp(1.5)),
+              // ),
+              //MaterialButton(
+              //child: Text(
+              //"Registrate",
+              //style: TextStyle(
+              //color: Color.fromRGBO(254, 80, 0, 1),
+              // fontSize: responsive.dp(1.5)),
+              // ),
+              //onPressed: () {
+              //  Navigator.pushNamed(context, 'register');
+              // },
+              // ),
+              //],
+              //),
               SizedBox(height: responsive.dp(10)),
             ],
           ),

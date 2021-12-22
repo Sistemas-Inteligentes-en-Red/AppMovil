@@ -13,7 +13,6 @@ class AuthenticationAPI {
     @required String password,
   }) async {
     try {
-      //await Future.delayed(Duration(seconds: 2));
       final response = await _dio.post(
         'https://curso-api-flutter.herokuapp.com/api/v1/register',
         options: Options(headers: {
@@ -57,9 +56,8 @@ class AuthenticationAPI {
     @required String password,
   }) async {
     try {
-      //await Future.delayed(Duration(seconds: 2));
       final response = await _dio.post(
-        'http://10.0.2.2:8000/api/logins/',
+        'https://logistica-api.azurewebsites.net/api/logins/',
         data: {
           "username": email,
           "password": password,
@@ -71,7 +69,7 @@ class AuthenticationAPI {
     } catch (e) {
       _logger.e(e);
 
-      int statusCode = -1; //
+      int statusCode = -1;
       String message = 'Error Desconocido';
       dynamic data;
 

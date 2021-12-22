@@ -1,63 +1,58 @@
 import 'dart:convert';
-//import 'dart:io';
-
 import 'package:aplicacion1/models/Gif.dart';
-//import 'package:aplicacion1/widgets/circle.dart';
+import 'package:aplicacion1/pages/puntos.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ListaPage extends StatefulWidget {
   static const routeName = 'rutas';
-  ListaPage({Key key}) : super(key: key);
+
+  final String placa, xtoken;
+
+  ListaPage(this.placa, this.xtoken, {Key key}) : super(key: key);
 
   @override
   _ListaPageState createState() => _ListaPageState();
 }
 
 class _ListaPageState extends State<ListaPage> {
-  // ignore: unused_field
+  final formKey = new GlobalKey<ScaffoldState>();
+  int idx;
+
+  String xtoken;
+
   Future<List<Gif>> _listadoGifs;
-  // ignore: missing_return
 
   Future<List<Gif>> _getGifs() async {
     final response = await http.post(
-        Uri.encodeFull("http://10.0.2.2:8000/api/report-milla/"),
+        Uri.encodeFull(
+            "https://logistica-api.azurewebsites.net/api/report-milla/"),
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json, text/plain",
-          //'Authorization': 'Token 15da269baf2777bf3590919ca146b860cb022e3c'
-          'Authorization': 'Token 3ea5587ab6663f6cc240106c154651d27ed14d3d'
+          'Authorization': 'Token ' + widget.xtoken
         },
         body: jsonEncode({
-          "data": {"date": "", "vehicle": "SNL943", "user": ""}
+          "data": {"date": "", "vehicle": widget.placa.toString(), "user": ""}
         }));
 
-    //creamos lista
     List<Gif> gifs = [];
     //
     if (response.statusCode == 201) {
-      //print(response.body);
-      //Esto es para que las api este codificada
       String body = utf8.decode(response.bodyBytes);
-      //convertimos la informacion en un json valido
       // ignore: unused_local_variable
       final jsonData = jsonDecode(body);
-      //print(jsonData["data"][0]);
-      //---------------------------------------------------
-      print('Este es el Token');
-      print(jsonData);
-
-      //----------------------------------------------------
+      //print('Este es el Token');
+      //print(jsonData);
       var notesJson = json.decode(response.body);
       for (var item in notesJson) {
         gifs.add(Gif(item["id"], item["route"], item["total_distance"],
-            item["total_time"], item["date"]));
+            item["total_time"], item["date"], item["total_visits"]));
       }
-      //print(gifs.toString());
       return gifs;
     } else {
       print(response.statusCode);
-      throw Exception("Fallo la ConexionXX");
+      throw Exception("Fallo la Conexion");
     }
   }
 
@@ -73,7 +68,7 @@ class _ListaPageState extends State<ListaPage> {
       title: 'Material App',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Rutas'),
+          title: Text('RUTAS - ' + widget.placa),
           elevation: 12,
           backgroundColor: Color.fromRGBO(0, 48, 135, 1),
           leading: IconButton(
@@ -82,21 +77,11 @@ class _ListaPageState extends State<ListaPage> {
               Navigator.pop(context);
             },
           ),
-          //actions: [
-          //IconButton(
-          // icon: Icon(Icons.access_alarms),
-          //onPressed: () {
-          // print("XXX");
-          // _showPuntos(context);
-          //}),
-          //],
         ),
         body: FutureBuilder(
           future: _listadoGifs,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              //print(snapshot.data);
-              //return Text("HolaX");
               return ListView(
                 children: _listGifs(snapshot.data),
               );
@@ -120,64 +105,56 @@ class _ListaPageState extends State<ListaPage> {
         child: ListTile(
           leading: Icon(
             Icons.airport_shuttle,
-            color: Color.fromRGBO(254, 80, 0, 1),
+            color: Color.fromRGBO(0, 48, 135, 1),
           ),
           title: Column(
             children: [
-              Text("Ruta: " + gif.id.toString()),
-              Text(gif.ruta),
-              Text(" "),
+              Text(
+                "FECHA: " + gif.fecha,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  //fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "Visitas: " + gif.visit.toString(),
+                style: TextStyle(),
+              ),
             ],
           ),
-          isThreeLine: true,
           subtitle: Column(
-            children: [
-              Text("Fecha: " + gif.fecha),
-              Text("Tiempo: " + gif.tiempo.toString()),
-              Text("Distancia: " + gif.distancia.toString()),
-            ],
+            children: [],
           ),
           onTap: () {
-            _showPuntos(context);
-            //print("**********************************");
-            // print(gif.id);
-            //print(gif.ruta);
-            //print(gif.tiempo.toString());
-            // print(gif.distancia.toString());
-            //print(gif.fecha);
-            //print(gifs);
+            idx = gif.id;
+            xtoken = widget.xtoken;
+            //print(idx);
+            //print(xtoken);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PuntosRuta(idx, xtoken)));
           },
-          trailing: Icon(
-            Icons.arrow_forward_ios_outlined,
-            color: Color.fromRGBO(254, 80, 0, 1),
+          trailing: Card(
+            child: Column(
+              children: [
+                Text(
+                  "Ruta: " + gif.id.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromRGBO(0, 153, 255, 1),
+                  ),
+                ),
+                Text("t(m): " + gif.tiempo.toString()),
+                Text("d(km): " + gif.distancia.toString()),
+              ],
+            ),
+            color: Colors.grey[50],
           ),
-          //Column(
-          //children: [
-          //Card(
-          //child: Column(
-          // children: [
-          // Text("T: " + gif.tiempo.toString()),
-          //Text(gif.tiempo.toString()),
-          //Text("D: " + gif.distancia.toString()),
-          //Text(gif.distancia.toString()),
-          // ],
-          // ),
-          //),
-          // ],
-          //),
-          minLeadingWidth: 20,
-          //minVerticalPadding: 10,
-          //selected: true,
-          selectedTileColor: Colors.white24,
         ),
       ));
     }
     return gifs;
-  }
-
-  void _showPuntos(BuildContext context) {
-    //Navigator.pushNamed(context, 'rutas');
-    //Navigator.pushNamed(context, ListaPage.routeName);
-    Navigator.pushNamed(context, 'puntos');
   }
 }

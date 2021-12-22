@@ -14,7 +14,6 @@ class Responsive {
   // PARA PODE HACER INSTANCIAS DE LA CLASE
   static Responsive of(BuildContext context) => Responsive(context);
 
-  //
   Responsive(BuildContext context) {
     final size = MediaQuery.of(context).size;
     this._width = size.width;
