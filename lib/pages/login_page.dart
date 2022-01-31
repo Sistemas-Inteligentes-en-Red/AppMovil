@@ -3,7 +3,7 @@ import 'package:aplicacion1/widgets/circle.dart';
 import 'package:aplicacion1/widgets/icon_continer.dart';
 import 'package:aplicacion1/widgets/login_form.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+//import 'package:flutter/rendering.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);

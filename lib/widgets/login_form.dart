@@ -129,7 +129,7 @@ class _LoginFormState extends State<LoginForm> {
                 child: MaterialButton(
                   padding: EdgeInsets.symmetric(vertical: 15),
                   child: Text(
-                    "Iniciar Seccion",
+                    "Iniciar Sesión",
                     style: TextStyle(
                         color: Colors.white, fontSize: responsive.dp(1.5)),
                   ),

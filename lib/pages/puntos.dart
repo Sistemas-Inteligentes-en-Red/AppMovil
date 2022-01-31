@@ -27,18 +27,21 @@ class _PuntosRutaState extends State<PuntosRuta> {
   String tinicio;
   String tfinal;
   String hora;
-  //--
+
   String estado;
-  //--
+  String nota;
+
+  String ytoken;
 
   String pasarDato;
   Future<List<Gifx>> _listadoGifs;
 
   Future<List<Gifx>> _getGifs() async {
     final response = await http.get(
-        "https://logistica-api.azurewebsites.net/api/results-detail-milla/" +
-            widget.idx.toString() +
-            "/",
+        Uri.parse(
+            "https://logistica-api.azurewebsites.net/api/results-detail-milla/" +
+                widget.idx.toString() +
+                "/"),
         headers: {HttpHeaders.authorizationHeader: "Token " + widget.xtoken});
 
     List<Gifx> gifs = [];
@@ -47,8 +50,8 @@ class _PuntosRutaState extends State<PuntosRuta> {
       String body = utf8.decode(response.bodyBytes);
       final jsonData = jsonDecode(body);
 
-      //print('Primera Impresion');
-      //print(body);
+      //print("Este es el Token *****************");
+      //print(widget.xtoken);
 
       for (var item in jsonData["data"]) {
         gifs.add(Gifx(
@@ -59,9 +62,11 @@ class _PuntosRutaState extends State<PuntosRuta> {
             item["contactPhone"],
             item["time_window_start"],
             item["time_window_end"],
-            item["hours"],
+            //item["hours"],
+            item["report_time"],
             //--
-            item["novelty"]
+            item["novelty"],
+            item["note"]
             //--
             ));
       }
@@ -77,9 +82,10 @@ class _PuntosRutaState extends State<PuntosRuta> {
   var fred;
   Future<String> _getGifsxx([String pasarDato]) async {
     final response = await http.get(
-        "https://logistica-api.azurewebsites.net/api/results-detail-milla/" +
-            widget.idx.toString() +
-            "/",
+        Uri.parse(
+            "https://logistica-api.azurewebsites.net/api/results-detail-milla/" +
+                widget.idx.toString() +
+                "/"),
         headers: {HttpHeaders.authorizationHeader: "Token " + widget.xtoken});
 
     if (response.statusCode == 201) {
@@ -88,13 +94,6 @@ class _PuntosRutaState extends State<PuntosRuta> {
       String pasarDato = jsonData['map'];
 
       final mapas = new Mapas(pasarDato);
-
-      //print('Segunda Impresion');
-      //print(
-      //"https://logistica-api.azurewebsites.net/api/results-detail-milla/" +
-      // widget.idx.toString() +
-      //  "/");
-      //print(mapas.pasar);
 
       fred = mapas.pasar;
 
@@ -118,7 +117,7 @@ class _PuntosRutaState extends State<PuntosRuta> {
       title: 'Material App',
       home: Scaffold(
         appBar: AppBar(
-          title: Text("CLIENTES - RUTA: " + widget.idx.toString()),
+          title: Text("RUTA: " + widget.idx.toString()),
           elevation: 12,
           backgroundColor: Colors.black,
           leading: IconButton(
@@ -128,6 +127,25 @@ class _PuntosRutaState extends State<PuntosRuta> {
             },
           ),
           actions: [
+            //-----------------------------************************
+            Card(
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.alarm_outlined),
+                    iconSize: 40,
+                    color: ac == null ? Colors.red : Colors.green,
+                    onPressed: () => playRoute().then(
+                      (value) => setState(() {
+                        _listadoGifs = _getGifs();
+                      }),
+                    ),
+                  ),
+                ],
+              ),
+
+              //------------------------------******************************
+            ),
             Card(
               child: Row(
                 children: [
@@ -138,9 +156,9 @@ class _PuntosRutaState extends State<PuntosRuta> {
                     iconSize: 40,
                     onPressed: () => _showRuta(context),
                   ),
-                  Text(
-                    "",
-                  ),
+                  //Text(
+                  // "hola",
+                  // ),
                 ],
               ),
             ),
@@ -180,29 +198,22 @@ class _PuntosRutaState extends State<PuntosRuta> {
                 color: Color.fromRGBO(0, 153, 255, 1),
               ),
               trailing: Card(
-                //--
-                //color: gif.estado == 'Entregado'
-                // ? Colors.green
-                // : Colors.amberAccent,
                 color: gif.estado == 'Entregado'
-                    ? Color(0xFF91C5A4)
+                    ? Color(0xFF7DCD40)
                     : gif.estado == 'Con retraso'
-                        ? Color(0xFFDECCA5)
+                        ? Color(0xFFFFB81C)
                         : gif.estado == 'Cancelado'
-                            ? Color(0xFFC96969)
+                            ? Color(0xFFAC0000)
                             : gif.estado == 'En curso'
-                                ? Color(0xFFB1C7D6)
+                                ? Color(0xFF0099FF)
                                 : gif.estado == 'Próximo'
-                                    ? Color(0xFFEBAC87)
+                                    ? Color(0xFFFE5000)
                                     : Color(0xFFD9D8D5),
-                //--
-                //color: Color(0xC20969),
                 child: Column(
                   children: [
                     Text(
                       "Hora",
                       style: TextStyle(
-                        //fontSize: 10,
                         color: Colors.black,
                       ),
                     ),
@@ -214,13 +225,6 @@ class _PuntosRutaState extends State<PuntosRuta> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    //Text(
-                    // gif.estado,
-                    //style: TextStyle(
-                    //fontSize: 15,
-                    //color: Colors.black,
-                    //),
-                    //),
                   ],
                 ),
               ),
@@ -263,25 +267,33 @@ class _PuntosRutaState extends State<PuntosRuta> {
                 tinicio = gif.tinicio;
                 tfinal = gif.tfinal;
                 hora = gif.hora;
-                //----
                 estado = gif.estado;
-                //-----
-                //print(idc);
-                // print(direccion);
-                //print(cliente);
-                //print(nombre);
-                //print(telefono);
-                //print(tinicio);
-                //print(tfinal);
-                //print(hora);
-                //*print(_textoController.text);
+                nota = gif.nota;
+                ytoken = widget.xtoken;
+
+                // print("Este es YTOKEN");
+                // print(ytoken);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PointPage(idc, direccion, cliente,
-                            nombre, telefono, tinicio, tfinal, hora, estado)));
+                        builder: (context) => PointPage(
+                              idc,
+                              direccion,
+                              cliente,
+                              nombre,
+                              telefono,
+                              tinicio,
+                              tfinal,
+                              hora,
+                              estado,
+                              nota,
+                              ytoken,
+                            ))).then((value) => setState(() {
+                      _listadoGifs = _getGifs();
+                      //PuntosRuta(widget.idx, widget.xtoken);
+                    }));
 
-                _showPunto(context);
+                //_showPunto(context);
               }),
         ),
       );
@@ -292,15 +304,38 @@ class _PuntosRutaState extends State<PuntosRuta> {
   void _showRuta(BuildContext context) async {
     var ooo = await _getGifsxx(pasarDato);
     Navigator.of(context).pushNamed("/second", arguments: ooo.toString());
-    //print("**********************************");
-    //print(_getGifsxx.toString());
-    //print(Mapas(pasarDato));
-    //print(ooo);
   }
 
-  void _showPunto(BuildContext context) {
-    Navigator.pushNamed(context, 'Punto');
-    //Navigator.push(context,
-    // MaterialPageRoute(builder: (context) => PuntosRuta(idc, estado)));
+  String ac;
+
+  Future playRoute() async {
+    var response = await http.put(
+      Uri.parse("https://logistica-api.azurewebsites.net/api/start-route/" +
+          widget.idx.toString() +
+          "/"),
+      headers: {
+        HttpHeaders.authorizationHeader:
+            //"Content-Type": "application/json",
+            //"Accept": "application/json, text/plain",
+            "Token " + widget.xtoken
+      },
+    );
+    print(response.body);
+    //String ac;
+    if (response.statusCode == 200) {
+      String body = utf8.decode(response.bodyBytes);
+      final jsonData = jsonDecode(body);
+
+      //print('iniciar ruta');
+      //print(jsonData);
+      //print(response.statusCode);
+      //print("------");
+
+      ac = jsonData['route'];
+      print(ac);
+    } else {
+      print(response.statusCode);
+      throw Exception("Fallo la Conexion");
+    }
   }
 }

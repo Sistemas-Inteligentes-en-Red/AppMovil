@@ -17,7 +17,7 @@ class _InicioPageState extends State<InicioPage> {
   final formKey = new GlobalKey<ScaffoldState>();
   String placa, xtoken;
   final placaVehiculo = TextEditingController();
-  var textox = 'Palaca del vehiculo';
+  var textox = 'Placa del vehículo';
   @override
   Widget build(BuildContext context) {
     SecondPageArguments arguments = ModalRoute.of(context).settings.arguments;
@@ -77,7 +77,7 @@ class _InicioPageState extends State<InicioPage> {
                   onPressed: () {
                     if (_textoController.text.trim().length == 0) {
                       setState(() {
-                        textox = 'Por Favor Ingrese la Placa del Vehiculo';
+                        textox = 'Por Favor Ingrese la Placa del Vehículo';
                       });
                       return null;
                     } else {
@@ -179,7 +179,7 @@ class _InicioPageState extends State<InicioPage> {
           Card(
             child: ListTile(
               title: Text(
-                'Cerrar Seccion',
+                'Cerrar Sesíon',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

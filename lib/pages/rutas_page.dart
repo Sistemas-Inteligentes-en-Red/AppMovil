@@ -25,8 +25,7 @@ class _ListaPageState extends State<ListaPage> {
 
   Future<List<Gif>> _getGifs() async {
     final response = await http.post(
-        Uri.encodeFull(
-            "https://logistica-api.azurewebsites.net/api/report-milla/"),
+        Uri.parse("https://logistica-api.azurewebsites.net/api/report-milla/"),
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json, text/plain",
@@ -42,8 +41,6 @@ class _ListaPageState extends State<ListaPage> {
       String body = utf8.decode(response.bodyBytes);
       // ignore: unused_local_variable
       final jsonData = jsonDecode(body);
-      //print('Este es el Token');
-      //print(jsonData);
       var notesJson = json.decode(response.body);
       for (var item in notesJson) {
         gifs.add(Gif(item["id"], item["route"], item["total_distance"],
@@ -51,7 +48,7 @@ class _ListaPageState extends State<ListaPage> {
       }
       return gifs;
     } else {
-      print(response.statusCode);
+      //print(response.statusCode);
       throw Exception("Fallo la Conexion");
     }
   }
