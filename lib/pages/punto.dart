@@ -62,6 +62,7 @@ class _PointPageState extends State<PointPage> {
 
   @override
   Widget build(BuildContext context) {
+    String estActualizado = 'Sin Actualizar';
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -143,6 +144,7 @@ class _PointPageState extends State<PointPage> {
                       child: SizedBox(
                         width: double.infinity,
                         child: MaterialButton(
+                          // hoverColor: Color.fromRGBO(254, 80, 0, 1),
                           padding: EdgeInsets.symmetric(vertical: 15),
                           child: Text(
                             "Aceptar",
@@ -150,6 +152,7 @@ class _PointPageState extends State<PointPage> {
                           ),
                           onPressed: () {
                             estado = valueChoose;
+
                             // print(estado);
 
                             setState(() {
@@ -169,6 +172,13 @@ class _PointPageState extends State<PointPage> {
                             //print(pk);
                             //print(widget.estado);
 
+                            //llllllllllllllllllllllllllll
+                            if (estActualizado == 'Sin Actualizar') {
+                              setState(() {
+                                estActualizado = 'Actualizado';
+                              });
+                            }
+
                             if (valueChoose == 'ninguno') {
                               setState(() {
                                 indicador = 'Cambiar el Estado';
@@ -182,6 +192,11 @@ class _PointPageState extends State<PointPage> {
                               putData();
                             }
 
+                            //lllllllllllll
+                            setState(() {
+                              _PointPageState();
+                            });
+
                             //Navigator.maybePop(context);
                             //Navigator.pushNamed(context, 'puntos');
                             //Navigator.pop(context);
@@ -189,6 +204,14 @@ class _PointPageState extends State<PointPage> {
                           color: Color.fromRGBO(0, 153, 255, 1),
                         ),
                       ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Estado:  " + estActualizado,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromRGBO(0, 48, 135, 1),
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -300,6 +323,8 @@ class _PointPageState extends State<PointPage> {
     // Navigator.pushNamed(context, 'Photo');
     print("Tomar Foto");
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => PhotoPage()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => PhotoPage(widget.ztoken, widget.idc)));
   }
 }

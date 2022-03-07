@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:aplicacion1/models/Gifx.dart';
 import 'package:aplicacion1/models/Mapaz.dart';
 import 'package:aplicacion1/pages/punto.dart';
+import 'package:aplicacion1/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 //import 'package:logger/logger.dart';
 
 class PuntosRuta extends StatefulWidget {
@@ -34,6 +37,19 @@ class _PuntosRutaState extends State<PuntosRuta> {
   String ytoken;
 
   String pasarDato;
+
+  //
+  //final chrono = Chronometer();
+  //actualice
+
+  //gps
+  Location location = new Location();
+
+  bool _serviceEnabled = false;
+  PermissionStatus _permissionGranted = PermissionStatus.granted;
+  LocationData _locationData = LocationData.fromMap({});
+
+  //gps
   Future<List<Gifx>> _listadoGifs;
 
   Future<List<Gifx>> _getGifs() async {
@@ -117,7 +133,7 @@ class _PuntosRutaState extends State<PuntosRuta> {
       title: 'Material App',
       home: Scaffold(
         appBar: AppBar(
-          title: Text("RUTA: " + widget.idx.toString()),
+          title: Text(widget.idx.toString()),
           elevation: 12,
           backgroundColor: Colors.black,
           leading: IconButton(
@@ -127,7 +143,22 @@ class _PuntosRutaState extends State<PuntosRuta> {
             },
           ),
           actions: [
-            //-----------------------------************************
+            //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            Card(
+              child: IconButton(
+                icon: Icon(Icons.gps_fixed),
+                iconSize: 40,
+                color: Colors.blue,
+                onPressed: () {
+                  getLocation();
+                  Gps();
+                  setState(() {});
+                  //envioGps();
+                  Gps();
+                },
+              ),
+            ),
+            //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
             Card(
               child: Row(
                 children: [
@@ -138,13 +169,12 @@ class _PuntosRutaState extends State<PuntosRuta> {
                     onPressed: () => playRoute().then(
                       (value) => setState(() {
                         _listadoGifs = _getGifs();
+                        envioGps();
                       }),
                     ),
                   ),
                 ],
               ),
-
-              //------------------------------******************************
             ),
             Card(
               child: Row(
@@ -271,8 +301,11 @@ class _PuntosRutaState extends State<PuntosRuta> {
                 nota = gif.nota;
                 ytoken = widget.xtoken;
 
-                // print("Este es YTOKEN");
-                // print(ytoken);
+                //gps
+                print("GPS");
+                envioGps();
+                print("GPS");
+                //gps
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -338,4 +371,116 @@ class _PuntosRutaState extends State<PuntosRuta> {
       throw Exception("Fallo la Conexion");
     }
   }
+
+  //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+  void Gps() async {
+    await print("GPS Encendido");
+    await print(_locationData.latitude.toString());
+    await print(_locationData.longitude.toString());
+  }
+
+  void getLocation() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    setState(() {});
+  }
+
+//---
+  Future envioGps() async {
+    final response = await http.post(
+        Uri.parse("https://logistica-api.azurewebsites.net/api/set-gps/423/"),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json, text/plain",
+          'Authorization': 'Token ' + widget.xtoken.toString()
+        },
+        body: jsonEncode(
+            {"lat": _locationData.latitude, "lon": _locationData.longitude}));
+
+    //String actualizacion;
+
+    print("123456789");
+    print(widget.xtoken.toString());
+    print(_locationData.latitude.toString());
+    print(_locationData.longitude.toString());
+    print(response.body);
+
+    //double latitud, longitud;
+
+    if (response.statusCode == 200) {
+      String body = utf8.decode(response.bodyBytes);
+      final jsonData = jsonDecode(body);
+
+      //actualizacion = jsonData['updated_at'];
+      //latitud = jsonData['lat'];
+      //longitud = jsonData['lon'];
+
+      print(response.statusCode);
+      //print(actualizacion);
+      //print(latitud.toString());
+      //print(longitud.toString());
+    } else {
+      print(response.statusCode);
+      throw Exception("Fallo la Conexion");
+    }
+  }
+//---
+
 }
+
+//eeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+//class Chronometer {
+  //inicia el cromometro
+ // DateTime _startDateTime;
+ // final _mainStreamController = StreamController<String>();
+ //// final _stateStreamController = StreamController<bool>();
+ // bool _running = false;
+
+//  Stream get chronometerStream {
+ //   return _mainStreamController.stream;
+ // }
+
+//  Stream get stateStream {
+ //   return _stateStreamController.stream;
+ // }
+
+ // bool get running {
+ //   return _running;
+ // }
+
+ // void start() {
+ //   _startDateTime = DateTime.now();
+ //   _running = true;
+ //   _stateStreamController.sink.add(true);
+ //   Timer.periodic(Duration(seconds: 1), (timer) {
+  //    if (!_running) {
+  //      timer.cancel();
+  //      return;
+   //   }
+  //    final diference = DateTime.now().difference(_startDateTime);
+  //    String formato = formatDuration(diference);
+  //    _mainStreamController.sink.add(formato);
+  //  });
+ // }
+
+ // void stop() {
+  //  _running = false;
+  //  _stateStreamController.sink.add(false);
+ // }
+//}
+  //eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee

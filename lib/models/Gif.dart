@@ -2,7 +2,7 @@ class Gif {
   int id;
   String ruta;
   double tiempo;
-  double distancia;
+  double distancia = null;
   String fecha;
   int visit;
 
@@ -10,7 +10,7 @@ class Gif {
     this.id = id;
     this.ruta = ruta;
     this.tiempo = tiempo;
-    this.distancia = distancia;
+    //this.distancia = distancia;
     this.fecha = fecha;
     this.visit = visit;
   }
